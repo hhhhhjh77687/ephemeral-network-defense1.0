@@ -1,0 +1,71 @@
+How to Run on Linux
+This core framework runs natively on any modern Linux distribution (Ubuntu, Debian, CentOS, Fedora, etc.) using the built-in Python 3 engine.
+### Step 1: Clone the Repository
+Open your terminal and pull down the source code:
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git
+cd YOUR_REPOSITORY_NAME
+
+```
+### Step 2: Verify Python Environment
+Ensure your Linux environment has Python 3.8 or higher installed:
+```bash
+python3 --version
+
+```
+*If Python 3 isn't installed, fetch it via your package manager (e.g., sudo apt install python3 on Debian/Ubuntu).*
+### Step 3: Set Executable Permissions (Optional)
+If you want to run the script cleanly as a standalone binary utility without explicitly typing python3 every time, grant it execution permissions:
+```bash
+chmod +x mtd_core.py
+
+```
+### Step 4: Execute the Simulation
+Run the asynchronous defense simulation engine directly from your shell:
+```bash
+python3 mtd_core.py
+
+```
+*(Or ./mtd_core.py if you completed Step 3).*
+## ⚙️ Running as a Persistent Background Service (Systemd)
+In a live Linux environment, you wouldn't run a security script manually inside an active terminal session. To run this framework as a persistent background daemon that automatically restarts if the server reboots, configure a **Systemd Service Unit**:
+ 1. Create a new service configuration file:
+   ```bash
+   sudo nano /etc/systemd/system/mtd-core.service
+   
+   ```
+ 2. Paste the following production unit configuration:
+```ini
+   [Unit]
+   Description=Ephemeral MTD Core Shifting Defense Service
+   After=network.target
+
+   [Service]
+   Type=simple
+   User=nobody
+   Group=nogroup
+   WorkingDirectory=/absolute/path/to/YOUR_REPOSITORY_NAME
+   ExecStart=/usr/bin/python3 /absolute/path/to/YOUR_REPOSITORY_NAME/mtd_core.py
+   Restart=always
+   RestartSec=5
+
+   [Install]
+   WantedBy=multi-user.target
+
+```
+*(Make sure to replace /absolute/path/to/ with the actual path where your script lives).*
+ 3. Reload systemd, enable the service to start at boot, and fire it up:
+```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable mtd-core.service
+   sudo systemctl start mtd-core.service
+
+```
+ 4. Monitor the live security logs natively using journalctl:
+   ```bash
+   sudo journalctl -u mtd-core.service -f
+   
+   ```
+```
+
+```
